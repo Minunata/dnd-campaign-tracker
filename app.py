@@ -138,9 +138,16 @@ def main():
     st.title("📜 D&D Campaign Tracker")
     st.caption("Track party levels, last-session notes, and hooks—share a read-only link with your players.")
 
-    # Query param for public mode
-    query_params = st.experimental_get_query_params()
-    public_mode = query_params.get("mode", [""])[0].lower() == "public"
+    # Query param for GM edit key (default is read-only)
+    params = st.experimental_get_query_params()
+    provided_key = params.get("key", [""])[0]
+    EDIT_KEY = st.secrets.get("EDIT_KEY", "")
+    can_edit = EDIT_KEY and (provided_key == EDIT_KEY)
+
+    if can_edit:
+        st.success("GM Edit Mode (key verified)")
+    else:
+        st.info("Read-only mode. Add your GM key to the URL (?key=...) to edit.")
 
     # Load data
     df = read_data()
@@ -168,7 +175,7 @@ def main():
     st.dataframe(view, use_container_width=True, hide_index=True)
 
     # Add/Edit (only if not public)
-    if not public_mode:
+    if not can_edit:
         st.divider()
         st.subheader("✍️ Edit Tracker")
 
