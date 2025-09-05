@@ -32,6 +32,50 @@ st.markdown(f"""
 </style>
 """, unsafe_allow_html=True)
 
+# --- glassy panels over your background ---
+st.markdown("""
+<style>
+:root{
+  --panel-alpha: 0.68;      /* transparency (0=transparent, 1=solid) */
+  --panel-bg: 255,255,255;  /* white glass; use 17,24,39 for dark glass */
+  --panel-text: #111827;    /* text color for white glass */
+}
+
+/* main page container */
+.block-container{
+  background: rgba(var(--panel-bg), var(--panel-alpha));
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 18px;
+  padding: 1.5rem 2rem;
+}
+
+/* sidebar panel */
+[data-testid="stSidebar"] > div:first-child{
+  background: rgba(var(--panel-bg), calc(var(--panel-alpha) + 0.06));
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-right: 1px solid rgba(255,255,255,0.25);
+}
+
+/* your cards/badges */
+.card{
+  background: rgba(var(--panel-bg), var(--panel-alpha));
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 16px;
+}
+.badge{
+  background: rgba(var(--panel-bg), var(--panel-alpha));
+  border: 1px solid rgba(255,255,255,0.35);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+</style>
+""", unsafe_allow_html=True)
+
+
 # One shared party record (order matters)
 PARTY_FIELDS = [
     "Level",
@@ -135,8 +179,7 @@ def write_party(data: Dict[str, str]):
 # UI
 # -----------------------------
 def main():
-    st.title("📜 D&D Party Tracker")
-    st.caption("GM edits a single party record; players see a read-only dashboard.")
+    st.title("☀️ D&D Party Tracker")
     st.caption(f"Streamlit version: **{st.__version__}**")
 
     # --- styling ---
