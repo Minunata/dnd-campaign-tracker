@@ -121,6 +121,15 @@ st.markdown("""
   color:#6b7280; 
   font-style: italic;
 }
+
+/* Force section headings & markdown text to dark */
+h1, h2, h3, h4, h5, h6,
+.block-container p,
+.block-container span,
+.block-container div {
+  color: var(--panel-text, #111827) !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
