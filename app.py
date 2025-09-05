@@ -74,12 +74,12 @@ st.markdown("""
 
 /* titles above badges */
 .badge-title{
-  font-size: 0.85rem;
+  font-size: 1.1rem;
   font-weight: 600;
   letter-spacing: .02em;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.5rem;
   color: var(--panel-text, #111827);
-  opacity: .85;
+  opacity: .9;
 }
 
 /* circular badge (level) */
