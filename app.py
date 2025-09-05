@@ -36,7 +36,7 @@ st.markdown(f"""
 st.markdown("""
 <style>
 :root{
-  --panel-alpha: 0.68;      /* transparency (0=transparent, 1=solid) */
+  --panel-alpha: 0.45;      /* transparency (0=transparent, 1=solid) */
   --panel-bg: 255,255,255;  /* white glass; use 17,24,39 for dark glass */
   --panel-text: #111827;    /* text color for white glass */
 }
