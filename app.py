@@ -83,9 +83,7 @@ def read_party() -> Dict[str, str]:
             with open(CSV_FALLBACK_PATH, "r", encoding="utf-8", newline="") as f:
                 reader = csv.DictReader(f)
                 for r in reader:
-                    # Only first row is used
-                    data = {k: r.get(k, "") for k in PARTY_FIELDS}
-                    return data
+                    return {k: r.get(k, "") for k in PARTY_FIELDS}  # first row only
         except Exception:
             pass
     return _defaults()
@@ -111,25 +109,12 @@ def write_party(data: Dict[str, str]):
         st.error(f"Could not save CSV: {e}")
 
 # -----------------------------
-# Small helpers
-# -----------------------------
-def chips(text: str) -> str:
-    """Render comma/semicolon separated items as little pills."""
-    items = [x.strip() for x in str(text).replace(";", ",").split(",") if x.strip()]
-    if not items:
-        return ""
-    pills = "".join(
-        f"<span style='display:inline-block;padding:4px 10px;margin:3px;border-radius:999px;border:1px solid #e5e7eb;background:#f8fafc'>{x}</span>"
-        for x in items
-    )
-    return pills
-
-# -----------------------------
 # UI
 # -----------------------------
 def main():
     st.title("📜 D&D Party Tracker")
     st.caption("GM edits a single party record; players see a read-only dashboard.")
+    st.caption(f"Streamlit version: **{st.__version__}**")
 
     # --- styling ---
     st.markdown(
@@ -148,9 +133,14 @@ def main():
         unsafe_allow_html=True
     )
 
-    # GM key (read-only by default)
-    params = st.query_params
-    provided_key = str(params.get("key", "")).strip()
+    # GM key (read-only by default) with safe fallback for older Streamlit
+    if hasattr(st, "query_params"):
+        params = st.query_params
+        provided_key = str(params.get("key", "")).strip()
+    else:
+        qp = st.experimental_get_query_params()
+        provided_key = str(qp.get("key", [""])[0]).strip()
+
     EDIT_KEY = str(st.secrets.get("EDIT_KEY", "")).strip()
     can_edit = bool(EDIT_KEY) and (provided_key == EDIT_KEY)
 
@@ -185,10 +175,10 @@ def main():
     c1, c2 = st.columns(2)
     with c1:
         st.markdown("#### Quest Hooks")
-        st.markdown(chips(party.get("Quest Hooks", "")) or "<span class='muted'>None yet.</span>", unsafe_allow_html=True)
+        st.markdown(_chips(party.get("Quest Hooks", "")) or "<span class='muted'>None yet.</span>", unsafe_allow_html=True)
     with c2:
         st.markdown("#### Loot / Rewards")
-        st.markdown(chips(party.get("Loot/Rewards", "")) or "<span class='muted'>None yet.</span>", unsafe_allow_html=True)
+        st.markdown(_chips(party.get("Loot/Rewards", "")) or "<span class='muted'>None yet.</span>", unsafe_allow_html=True)
 
     # ======== GM EDIT FORM ========
     if can_edit:
@@ -196,7 +186,50 @@ def main():
         st.subheader("✍️ Edit Party")
 
         ec1, ec2, ec3 = st.columns(3)
-        level = ec1.number_input("Level", min_value=1, max_value=30, value=int(party.get("Level") or 1), step=1)
-        sessi
+        try:
+            level_default = int(party.get("Level") or 1)
+        except Exception:
+            level_default = 1
+        level = ec1.number_input("Level", min_value=1, max_value=30, value=level_default, step=1)
+        session_date = ec2.text_input("Session Date (YYYY-MM-DD or text)", value=party.get("Session Date", ""))
+        location = ec3.text_input("Location", value=party.get("Location", ""))
+
+        what = st.text_area("What Happened Last (brief)", value=party.get("What Happened Last", ""), height=160)
+        h1, h2 = st.columns(2)
+        hooks = h1.text_input("Quest Hooks (comma- or semicolon-separated)", value=party.get("Quest Hooks", ""))
+        loot  = h2.text_input("Loot/Rewards (comma- or semicolon-separated)", value=party.get("Loot/Rewards", ""))
+
+        if st.button("💾 Save Party"):
+            new_data = {
+                "Level": str(level),
+                "Session Date": session_date.strip(),
+                "Location": location.strip(),
+                "What Happened Last": what.strip(),
+                "Quest Hooks": hooks.strip(),
+                "Loot/Rewards": loot.strip(),
+            }
+            write_party(new_data)
+            st.success("Party updated.")
+            st.experimental_rerun()
+
+# helper moved below main so we can show exceptions if it fails to load
+def _chips(text: str) -> str:
+    """Render comma/semicolon separated items as little pills."""
+    items = [x.strip() for x in str(text).replace(";", ",").split(",") if x.strip()]
+    if not items:
+        return ""
+    pills = "".join(
+        f"<span style='display:inline-block;padding:4px 10px;margin:3px;border-radius:999px;border:1px solid #e5e7eb;background:#f8fafc'>{x}</span>"
+        for x in items
+    )
+    return pills
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as e:
+        # Surface any errors instead of a blank screen
+        st.exception(e)
+
 
 
