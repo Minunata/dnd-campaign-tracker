@@ -334,24 +334,24 @@ def main():
         st.markdown(f'<div class="circle-badge">{party.get("Level","—") or "—"}</div>', unsafe_allow_html=True)
 
     with col2:
-        st.markdown('<div class="badge-title">Session Date:</div>', unsafe_allow_html=True)
+        st.markdown('<div class="badge-title">Next Session Date:</div>', unsafe_allow_html=True)
         st.markdown(f'<div class="pill-badge">{party.get("Session Date","—") or "—"}</div>', unsafe_allow_html=True)
 
     with col3:
-        st.markdown('<div class="badge-title">Location:</div>', unsafe_allow_html=True)
+        st.markdown('<div class="badge-title">Last Location:</div>', unsafe_allow_html=True)
         st.markdown(f'<div class="pill-badge">{party.get("Location","—") or "—"}</div>', unsafe_allow_html=True)
 
     st.markdown("")
     st.markdown("#### What Happened Last")
-    st.markdown(f"<div class='card'>{(party.get('What Happened Last','') or '_No notes yet._')}</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='card'>{(party.get('What Happened Last','') or 'No notes yet.')}</div>", unsafe_allow_html=True)
 
     st.markdown("")
     c1, c2 = st.columns(2)
     with c1:
-        st.markdown("#### Quest Hooks")
+        st.markdown("#### Quests")
         st.markdown(_chips(party.get("Quest Hooks", "")) or "<span class='muted'>None yet.</span>", unsafe_allow_html=True)
     with c2:
-        st.markdown("#### Loot / Rewards")
+        st.markdown("#### Magic Items Found")
         st.markdown(_chips(party.get("Loot/Rewards", "")) or "<span class='muted'>None yet.</span>", unsafe_allow_html=True)
 
     # ======== GM EDIT FORM ========
