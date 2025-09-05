@@ -61,7 +61,7 @@ st.markdown("""
   border-right: 1px solid rgba(255,255,255,0.25);
 }
 
-/* cards/badges */
+/* your cards/badges */
 .card{
   background: rgba(var(--panel-bg), var(--panel-alpha));
   backdrop-filter: blur(6px);
@@ -69,8 +69,6 @@ st.markdown("""
   border: 1px solid rgba(255,255,255,0.35);
   border-radius: 16px;
 }
-
-/* badges */
 .badge{
   background: rgba(var(--panel-bg), var(--panel-alpha));
   border: 1px solid rgba(255,255,255,0.35);
