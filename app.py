@@ -1,10 +1,11 @@
 import os
 import io
+import json
 import time
 from typing import Optional, List
+
 import pandas as pd
 import streamlit as st
-import json
 
 # -----------------------------
 # App Settings
@@ -42,15 +43,15 @@ def _get_gsheets_client():
     try:
         import gspread
         from google.oauth2.service_account import Credentials
+
         sa_info = os.environ["GSHEETS_SA_JSON"]
         sheet_name = os.environ["GSHEETS_SHEET_NAME"]  # name or url
 
-        # Create credentials from the JSON string
         creds = Credentials.from_service_account_info(
             json.loads(sa_info),
             scopes=[
                 "https://www.googleapis.com/auth/spreadsheets",
-                "https://www.googleapis.com/auth/drive"
+                "https://www.googleapis.com/auth/drive",
             ],
         )
         client = gspread.authorize(creds)
@@ -102,7 +103,12 @@ def write_data(df: pd.DataFrame):
             ws.clear()
             ws.append_row(DEFAULT_COLUMNS)
             if len(df) > 0:
-                ws.update(f"A2", [df[col].astype(str).tolist() for col in DEFAULT_COLUMNS], raw=False, major_dimension="COLUMNS")
+                ws.update(
+                    "A2",
+                    [df[col].astype(str).tolist() for col in DEFAULT_COLUMNS],
+                    raw=False,
+                    major_dimension="COLUMNS",
+                )
             return
     # CSV fallback
     df.to_csv(CSV_FALLBACK_PATH, index=False)
@@ -126,7 +132,7 @@ def clean_df_types(df: pd.DataFrame) -> pd.DataFrame:
 def add_row(df: pd.DataFrame, template: Optional[dict] = None) -> pd.DataFrame:
     row = {c: "" for c in DEFAULT_COLUMNS}
     if template:
-        row.update({k:v for k,v in template.items() if k in row})
+        row.update({k: v for k, v in template.items() if k in row})
     return pd.concat([df, pd.DataFrame([row])], ignore_index=True)
 
 def delete_rows(df: pd.DataFrame, indices: List[int]) -> pd.DataFrame:
@@ -140,10 +146,10 @@ def main():
     st.caption("Track party levels, last-session notes, and hooks—share a read-only link with your players.")
 
     # Query param for GM edit key (default is read-only)
-    params = st.query_params()
-    provided_key = params.get("key", [""])[0]
+    params = st.query_params  # new API
+    provided_key = params.get("key", "")
     EDIT_KEY = st.secrets.get("EDIT_KEY", "")
-    can_edit = EDIT_KEY and (provided_key == EDIT_KEY)
+    can_edit = bool(EDIT_KEY and (provided_key == EDIT_KEY))
 
     if can_edit:
         st.success("GM Edit Mode (key verified)")
@@ -157,10 +163,21 @@ def main():
     # Sidebar: Controls
     st.sidebar.header("View Options")
     if can_edit:
-        st.sidebar.info("Public mode: read-only view")
+        st.sidebar.success("GM Edit Mode")
+    else:
+        st.sidebar.info("Read-only")
+
     sort_col = st.sidebar.selectbox("Sort by", DEFAULT_COLUMNS, index=0)
     asc = st.sidebar.checkbox("Ascending", value=True)
     search = st.sidebar.text_input("Search (any field)", "")
+
+    # If GM, convenience: copy GM link
+    if can_edit:
+        with st.sidebar.expander("GM Link", expanded=False):
+            base_url = st.experimental_get_query_params  # kept for backwards compat? We'll derive from script
+            # We can’t reliably get the full public URL on Cloud from the server-side.
+            st.write("Append your key to the app URL like:")
+            st.code("?key=YOUR_EDIT_KEY")
 
     # Filter + sort
     view = df.copy()
@@ -175,7 +192,7 @@ def main():
     st.subheader("Party / Session Table")
     st.dataframe(view, use_container_width=True, hide_index=True)
 
-    # Add/Edit (GM Only)
+    # Add/Edit (GM only)
     if can_edit:
         st.divider()
         st.subheader("✍️ Edit Tracker")
