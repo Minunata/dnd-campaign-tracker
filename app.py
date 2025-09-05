@@ -7,7 +7,30 @@ import streamlit as st
 # -----------------------------
 # App Settings
 # -----------------------------
-st.set_page_config(page_title="D&D Party Tracker", page_icon="📜", layout="wide")
+st.set_page_config(page_title="D&D Party Tracker", page_icon="☀️", layout="wide")
+
+# ---- Background image (URL) ----
+BACKGROUND_URL = "https://media.istockphoto.com/id/1332567781/vector/greek-style-blue-grunge-frame-for-design-or-text.jpg?s=612x612&w=0&k=20&c=tdMOrm4oVi9J2CNn0IjstFK_CpX6hJBXwNUuMnMQj7M="  # <-- change me
+
+st.markdown(f"""
+<style>
+/* App background */
+.stApp {{
+  background: url('{BACKGROUND_URL}') no-repeat center center fixed;
+  background-size: cover;
+}}
+/* Make the main content readable on top of the image */
+.block-container {{
+  background: rgba(255,255,255,0.88);
+  border-radius: 18px;
+  padding: 1.5rem 2rem;
+}}
+/* Sidebar background */
+[data-testid="stSidebar"] > div:first-child {{
+  background: rgba(255,255,255,0.9);
+}}
+</style>
+""", unsafe_allow_html=True)
 
 # One shared party record (order matters)
 PARTY_FIELDS = [
