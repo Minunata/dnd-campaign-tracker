@@ -47,33 +47,64 @@ st.markdown("""
 /* main page container */
 .block-container{
   background: rgba(var(--panel-bg), var(--panel-alpha));
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: 18px;
   padding: 1.5rem 2rem;
+  border: 1px solid rgba(255,255,255,0.25);
 }
 
 /* sidebar panel */
 [data-testid="stSidebar"] > div:first-child{
-  background: rgba(var(--panel-bg), calc(var(--panel-alpha) + 0.06));
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border-right: 1px solid rgba(255,255,255,0.25);
+  background: rgba(var(--panel-bg), 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(255,255,255,0.2);
 }
 
-/* your cards/badges */
+/* cards */
 .card{
   background: rgba(var(--panel-bg), var(--panel-alpha));
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border: 1px solid rgba(255,255,255,0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.25);
   border-radius: 16px;
 }
-.badge{
-  background: rgba(var(--panel-bg), var(--panel-alpha));
-  border: 1px solid rgba(255,255,255,0.35);
+</style>
+""", unsafe_allow_html=True)
+
+# --- cute badges (circle + pill) ---
+st.markdown("""
+<style>
+.badge-title { font-weight:600; color:#334155; margin: 0 0 6px 2px; }
+
+/* circular badge (perfect circle) */
+.circle-badge {
+  display:flex; align-items:center; justify-content:center;
+  width:78px; height:78px;               /* size of the circle */
+  border-radius:50%;
+  border:2px solid #e5e7eb;
+  background:rgba(255,255,255,0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  font-size:1.35rem; font-weight:800;
+  color:#111827;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  margin-bottom:6px;
+}
+
+/* pill badge (rounded capsule) */
+.pill-badge {
+  display:inline-block;
+  padding:8px 18px;
+  border-radius:999px;
+  border:1px solid #e5e7eb;
+  background:rgba(255,255,255,0.6);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
+  font-size:1rem; font-weight:700;
+  color:#111827;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
 }
 </style>
 """, unsafe_allow_html=True)
@@ -286,15 +317,15 @@ def main():
 
     with col1:
         st.markdown('<div class="badge-title">Your current level is:</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="badge">{party.get("Level","—") or "—"}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="circle-badge">{party.get("Level","—") or "—"}</div>', unsafe_allow_html=True)
 
     with col2:
         st.markdown('<div class="badge-title">Session Date:</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="badge">{party.get("Session Date","—") or "—"}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="pill-badge">{party.get("Session Date","—") or "—"}</div>', unsafe_allow_html=True)
 
     with col3:
         st.markdown('<div class="badge-title">Location:</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="badge">{party.get("Location","—") or "—"}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="pill-badge">{party.get("Location","—") or "—"}</div>', unsafe_allow_html=True)
 
     st.markdown("")
     st.markdown("#### What Happened Last")
@@ -346,6 +377,7 @@ if __name__ == "__main__":
         main()
     except Exception as e:
         st.exception(e)
+
 
 
 
