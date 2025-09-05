@@ -116,6 +116,15 @@ st.markdown("""
   box-shadow: 0 2px 10px rgba(0,0,0,.06) inset;
 }
 
+/* add spacing below badges only on mobile */
+@media (max-width: 768px) {
+  .circle-badge,
+  .pill-badge {
+    margin-bottom: 1.5rem;  /* space between stacked badges and next title */
+  }
+}
+
+
 /* muted helper text */
 .muted{
   color:#6b7280; 
