@@ -389,8 +389,8 @@ def main():
 
         what = st.text_area("What Happened Last (brief)", value=party.get("What Happened Last", ""), height=160)
         h1, h2 = st.columns(2)
-        hooks = h1.text_input("Quest Hooks (comma- or semicolon-separated)", value=party.get("Quest Hooks", ""))
-        loot  = h2.text_input("Loot/Rewards (comma- or semicolon-separated)", value=party.get("Loot/Rewards", ""))
+        hooks = h1.text_input("Quests (comma- or semicolon-separated)", value=party.get("Quest Hooks", ""))
+        loot  = h2.text_input("Magic Items (comma- or semicolon-separated)", value=party.get("Loot/Rewards", ""))
 
         if st.button("💾 Save Party"):
             new_data = {
