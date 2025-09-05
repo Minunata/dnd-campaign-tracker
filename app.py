@@ -47,36 +47,35 @@ st.markdown("""
 /* main page container */
 .block-container{
   background: rgba(var(--panel-bg), var(--panel-alpha));
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   border-radius: 18px;
   padding: 1.5rem 2rem;
-  border: 1px solid rgba(255,255,255,0.25);
 }
 
 /* sidebar panel */
 [data-testid="stSidebar"] > div:first-child{
-  background: rgba(var(--panel-bg), 0.55);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-right: 1px solid rgba(255,255,255,0.2);
+  background: rgba(var(--panel-bg), calc(var(--panel-alpha) + 0.06));
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-right: 1px solid rgba(255,255,255,0.25);
 }
 
-/* cards */
+/* cards/badges */
 .card{
   background: rgba(var(--panel-bg), var(--panel-alpha));
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.25);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.35);
   border-radius: 16px;
 }
 
 /* badges */
 .badge{
-  background: rgba(var(--panel-bg), 0.5);
-  border: 1px solid rgba(255,255,255,0.3);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(var(--panel-bg), var(--panel-alpha));
+  border: 1px solid rgba(255,255,255,0.35);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 </style>
 """, unsafe_allow_html=True)
