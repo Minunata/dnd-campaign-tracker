@@ -35,7 +35,7 @@ st.markdown(f"""
 </style>
 """, unsafe_allow_html=True)
 
-# --- glassy panels over your background ---
+# --- glassy panels & badges ---
 st.markdown("""
 <style>
 :root{
@@ -61,19 +61,64 @@ st.markdown("""
   border-right: 1px solid rgba(255,255,255,0.25);
 }
 
-/* your cards/badges */
+/* card container */
 .card{
   background: rgba(var(--panel-bg), var(--panel-alpha));
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   border: 1px solid rgba(255,255,255,0.35);
   border-radius: 16px;
+  padding: 1rem;
+  margin-bottom: 1rem;
 }
-.badge{
+
+/* titles above badges */
+.badge-title{
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+  margin-bottom: 0.35rem;
+  color: var(--panel-text, #111827);
+  opacity: .85;
+}
+
+/* circular badge (level) */
+.circle-badge{
+  width: 80px;
+  height: 80px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.4rem;
   background: rgba(var(--panel-bg), var(--panel-alpha));
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   border: 1px solid rgba(255,255,255,0.35);
+  color: var(--panel-text, #111827);
+  box-shadow: 0 4px 14px rgba(0,0,0,.08) inset;
+}
+
+/* pill badge (date, location) */
+.pill-badge{
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 9999px;
+  font-weight: 600;
+  background: rgba(var(--panel-bg), var(--panel-alpha));
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.35);
+  color: var(--panel-text, #111827);
+  line-height: 1.2;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06) inset;
+}
+
+/* muted helper text */
+.muted{
+  color:#6b7280; 
+  font-style: italic;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -346,8 +391,3 @@ if __name__ == "__main__":
         main()
     except Exception as e:
         st.exception(e)
-
-
-
-
-
