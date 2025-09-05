@@ -105,7 +105,8 @@ st.markdown("""
   display: inline-block;
   padding: 8px 14px;
   border-radius: 9999px;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1.4rem;
   background: rgba(var(--panel-bg), var(--panel-alpha));
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
