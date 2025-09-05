@@ -140,7 +140,7 @@ def main():
     st.caption("Track party levels, last-session notes, and hooks—share a read-only link with your players.")
 
     # Query param for GM edit key (default is read-only)
-    params = st.experimental_get_query_params()
+    params = st.query_params()
     provided_key = params.get("key", [""])[0]
     EDIT_KEY = st.secrets.get("EDIT_KEY", "")
     can_edit = EDIT_KEY and (provided_key == EDIT_KEY)
