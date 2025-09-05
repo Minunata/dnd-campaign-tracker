@@ -4,6 +4,7 @@ import time
 from typing import Optional, List
 import pandas as pd
 import streamlit as st
+import json
 
 # -----------------------------
 # App Settings
@@ -155,7 +156,7 @@ def main():
 
     # Sidebar: Controls
     st.sidebar.header("View Options")
-    if public_mode:
+    if can_edit:
         st.sidebar.info("Public mode: read-only view")
     sort_col = st.sidebar.selectbox("Sort by", DEFAULT_COLUMNS, index=0)
     asc = st.sidebar.checkbox("Ascending", value=True)
@@ -174,8 +175,8 @@ def main():
     st.subheader("Party / Session Table")
     st.dataframe(view, use_container_width=True, hide_index=True)
 
-    # Add/Edit (only if not public)
-    if not can_edit:
+    # Add/Edit (GM Only)
+    if can_edit:
         st.divider()
         st.subheader("✍️ Edit Tracker")
 
@@ -228,7 +229,7 @@ def main():
     st.divider()
     st.subheader("📤 Export / Share")
     st.download_button("Download CSV", data=df.to_csv(index=False), file_name="campaign_tracker_export.csv", mime="text/csv")
-    st.caption("To share a read-only view, deploy the app and give players a URL like '?mode=public' to hide edit controls.")
+    st.caption("Share the base URL with players (read-only). To edit, append ?key=YOUR_EDIT_KEY to the URL.")
 
 if __name__ == "__main__":
     main()
