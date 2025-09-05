@@ -142,14 +142,29 @@ def delete_rows(df: pd.DataFrame, indices: List[int]) -> pd.DataFrame:
 # UI
 # -----------------------------
 def main():
-    st.title("📜 D&D Campaign Tracker")
-    st.caption("Track party levels, last-session notes, and hooks—share a read-only link with your players.")
+    st.title("☀️ The Eye of Helios")
+    st.caption("Track party levels, last-session notes, and other useful stuff.")
+
+    # --- compact styling for widgets/badges ---
+    st.markdown(
+        """
+        <style>
+        .badge-title { font-weight:600; color:#334155; margin: 0 0 6px 2px; }
+        .badge {
+          display:inline-block; padding:10px 18px; border-radius:999px;
+          border:1px solid #e5e7eb; background:#f8fafc;
+          font-size:1.25rem; font-weight:700; letter-spacing:0.3px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
     # Query param for GM edit key (default is read-only)
     params = st.query_params  # new API
-    provided_key = params.get("key", "")
-    EDIT_KEY = st.secrets.get("EDIT_KEY", "")
-    can_edit = bool(EDIT_KEY and (provided_key == EDIT_KEY))
+    provided_key = str(params.get("key", "")).strip()
+    EDIT_KEY = str(st.secrets.get("EDIT_KEY", "")).strip()
+    can_edit = bool(EDIT_KEY) and (provided_key == EDIT_KEY)
 
     if can_edit:
         st.success("GM Edit Mode (key verified)")
@@ -160,39 +175,34 @@ def main():
     df = read_data()
     df = clean_df_types(df)
 
-    # Sidebar: Controls
-    st.sidebar.header("View Options")
+    # Sidebar: minimal status
+    st.sidebar.header("View")
     if can_edit:
         st.sidebar.success("GM Edit Mode")
     else:
         st.sidebar.info("Read-only")
 
-    sort_col = st.sidebar.selectbox("Sort by", DEFAULT_COLUMNS, index=0)
-    asc = st.sidebar.checkbox("Ascending", value=True)
-    search = st.sidebar.text_input("Search (any field)", "")
+    # --------- WIDGETS (no table) ----------
+    st.subheader("Player Widgets")
 
-    # If GM, convenience: copy GM link
-    if can_edit:
-        with st.sidebar.expander("GM Link", expanded=False):
-            base_url = st.experimental_get_query_params  # kept for backwards compat? We'll derive from script
-            # We can’t reliably get the full public URL on Cloud from the server-side.
-            st.write("Append your key to the app URL like:")
-            st.code("?key=YOUR_EDIT_KEY")
+    # Character selector (supports URL preselect via ?character=Name)
+    names = [x for x in df["Character"].astype(str).unique() if x]
+    preselect = st.query_params.get("character", "")
+    default_idx = 0
+    if preselect and preselect in names:
+        default_idx = names.index(preselect) + 1
+    pick = st.selectbox("Select your character", ["—"] + names, index=default_idx)
 
-    # Filter + sort
-    view = df.copy()
-    if search.strip():
-        mask = pd.Series(False, index=view.index)
-        for c in DEFAULT_COLUMNS:
-            mask = mask | view[c].astype(str).str.contains(search, case=False, na=False)
-        view = view[mask]
-    view = view.sort_values(by=sort_col, ascending=asc)
+    if pick != "—" and len(df) > 0:
+        row = df[df["Character"].astype(str) == pick].head(1).to_dict("records")[0]
+        lvl = str(row.get("Level", "")).strip() or "—"
 
-    # Show table
-    st.subheader("Party / Session Table")
-    st.dataframe(view, use_container_width=True, hide_index=True)
+        st.markdown('<div class="badge-title">Your current level is:</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="badge">{lvl}</div>', unsafe_allow_html=True)
+    else:
+        st.caption("Choose a character to see your widgets.")
 
-    # Add/Edit (GM only)
+    # --------- GM EDIT CONTROLS ----------
     if can_edit:
         st.divider()
         st.subheader("✍️ Edit Tracker")
@@ -242,11 +252,6 @@ def main():
             st.success(f"Deleted {len(to_delete)} row(s).")
             st.experimental_rerun()
 
-    # Export
-    st.divider()
-    st.subheader("📤 Export / Share")
-    st.download_button("Download CSV", data=df.to_csv(index=False), file_name="campaign_tracker_export.csv", mime="text/csv")
-    st.caption("Share the base URL with players (read-only). To edit, append ?key=YOUR_EDIT_KEY to the URL.")
-
 if __name__ == "__main__":
     main()
+
