@@ -70,41 +70,13 @@ st.markdown("""
   border: 1px solid rgba(255,255,255,0.25);
   border-radius: 16px;
 }
-</style>
-""", unsafe_allow_html=True)
 
-# --- cute badges (circle + pill) ---
-st.markdown("""
-<style>
-.badge-title { font-weight:600; color:#334155; margin: 0 0 6px 2px; }
-
-/* circular badge (perfect circle) */
-.circle-badge {
-  display:flex; align-items:center; justify-content:center;
-  width:78px; height:78px;               /* size of the circle */
-  border-radius:50%;
-  border:2px solid #e5e7eb;
-  background:rgba(255,255,255,0.6);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  font-size:1.35rem; font-weight:800;
-  color:#111827;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-  margin-bottom:6px;
-}
-
-/* pill badge (rounded capsule) */
-.pill-badge {
-  display:inline-block;
-  padding:8px 18px;
-  border-radius:999px;
-  border:1px solid #e5e7eb;
-  background:rgba(255,255,255,0.6);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  font-size:1rem; font-weight:700;
-  color:#111827;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+/* badges */
+.badge{
+  background: rgba(var(--panel-bg), 0.5);
+  border: 1px solid rgba(255,255,255,0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 </style>
 """, unsafe_allow_html=True)
