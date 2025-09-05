@@ -10,7 +10,7 @@ import streamlit as st
 st.set_page_config(page_title="D&D Party Tracker", page_icon="☀️", layout="wide")
 
 # ---- Background image (URL) ----
-BACKGROUND_URL = "https://media.istockphoto.com/id/1332567781/vector/greek-style-blue-grunge-frame-for-design-or-text.jpg?s=612x612&w=0&k=20&c=tdMOrm4oVi9J2CNn0IjstFK_CpX6hJBXwNUuMnMQj7M="  # <-- change me
+BACKGROUND_URL = "https://i.pinimg.com/1200x/da/e2/ab/dae2ab85ba612195ad5f49ba2dc8138e.jpg"  # <-- change me
 
 st.markdown(f"""
 <style>
